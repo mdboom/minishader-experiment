@@ -1,7 +1,87 @@
+body {
+    font-family: 'Catamaran', sans-serif;
+    --theme-color: #932d3a;
+    --theme-hover: #e5602c;
+    --main-border: 20px;
+    background: black;
+    color: var(--theme-color);
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.demo-container {
+    display: grid;
+    grid-template-columns: [left] minmax(350px, 1fr) [content] 800px [right] 1fr;
+    border: var(--main-border) solid var(--theme-color);
+    min-height: calc(100vh - var(--main-border) * 2 - 40px);
+    padding-bottom:40px;
+}
+
+.main-container, .slide-container {
+    grid-column: content;
+    transform: translateY(-50px);
+}
+
+.main-container, .slide-container {
+    margin: auto;
+}
+
+#clock {
+    font-size:30px;
+    text-align: right;
+}
+
+.when {
+    text-align: right;
+    font-size: 22px;
+    text-transform: uppercase;
+    font-weight: 100;
+    opacity:.7;
+}
+
+.info-container {
+    grid-column: left;
+    margin-left: 20px;
+    margin-top: 20px;
+    line-height: 1.12;
+    height: 80vh;
+    padding-right:40px;
+}
+
+h1 {
+    margin:0;
+    color: var(--theme-color);
+    font-size: 35px;
+    font-weight: 900;
+    padding:0;
+    text-align:right;
+    padding-top:200px;
+}
+
 #canvas {
-    position: absolute;
+    /* position: absolute;
     top: 0;
-    left: 0;
+    left: 0; */
+}
+
+#playbutton {
+    background-color: transparent;
+    border: none;
+    border: 1px solid var(--theme-color);
+    color: var(--theme-color);
+    border-radius: 3px;
+    padding:8px;
+    padding-left: 12px;
+    padding-right:12px;
+    transition:100ms;
+}
+
+#playbutton:hover {
+    border: 1px solid var(--theme-hover);
+    color: #e5602c;
+    transform:scale(1.1);
 }
 
 .slider {
@@ -9,11 +89,14 @@
     width: 400px;
     height: 8px;
     border-radius: 5px;  
-    background: #d3d3d3;
+    background: var(--theme-color);
     outline: none;
     opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+    transition: .2s;
+}
+
+.slider:hover {
+    opacity: 1;
 }
 
 .slider::-webkit-slider-thumb {
@@ -21,15 +104,15 @@
     appearance: none;
     width: 10px;
     height: 10px;
-    border-radius: 50%; 
-    background: #888888;
+    border-radius: 80%; 
+    background: var(--theme-hover);
     cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background: #888888;
+    border-radius: 80%;
+    background: var(--theme-hover);
     cursor: pointer;
 }

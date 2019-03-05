@@ -1,18 +1,28 @@
 <html>
     <meta charset="UTF-8">
     <head>
-        <script src="decoder.js"></script>
+
+
+            <link href="https://fonts.googleapis.com/css?family=Catamaran:100,300,500,900" rel="stylesheet">
+            <script src="decoder.js"></script>
         <script src="example.js"></script>
         <link rel="stylesheet" href="minishader.css"/>
     </head>
     <body>
-        <div>
-            <canvas width="500" height="500" id="background"></canvas>
+    <div class=demo-container>
+        <div class=info-container>
+            <h1>SFMTA GPS Pings</h1>
+            <div class=when>Organized by Time Of Day</div>
+            <div id='clock'></div>
+        </div>
+        <div class=main-container>
+            <!-- <canvas width="500" height="500" id="background"></canvas> -->
             <canvas width="500" height="500" id="canvas"></canvas>
         </div>
-        <div class="slidecontainer">
+        <div class="slide-container">
             <input type="range" min="0" max="100" value="0" class="slider" id="range">
             <button id="playbutton">▶</button>
         </div>
+    </div>
     </body>
 </html>
