@@ -28,7 +28,7 @@ function callback(data) {
     }
 
     slider.oninput = function() {
-        var frame = decompressFrame(data, this.value, outputBuffer, inferno);
+        var frame = decompressFrame(data, this.value, outputBuffer, inferno, 210);
         var imageData = new ImageData(outputBuffer, data["width"], data["height"]);
         var ctx = canvas.getContext("2d");
         ctx.putImageData(imageData, 0, 0);
