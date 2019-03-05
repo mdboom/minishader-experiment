@@ -89,7 +89,7 @@ h1 {
 .slider {
     -webkit-appearance: none;
     width: 400px;
-    height: 8px;
+    height: 3px;
     border-radius: 5px;  
     background: var(--theme-color);
     outline: none;
@@ -99,6 +99,8 @@ h1 {
 
 .slider:hover {
     opacity: 1;
+    cursor: pointer;
+    height:4px;
 }
 
 .slider::-webkit-slider-thumb {
