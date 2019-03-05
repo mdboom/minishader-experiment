@@ -21,7 +21,6 @@ function callback(data) {
     var clock = document.getElementById('clock')
 
     const frameToClock = (fr) => {
-        //f * 5 * 60 // 12 intervals an hour * 24 hours
         const totalMin = fr * 5
         const hours = Math.floor(totalMin / (60 * 5))
         const mins = Math.floor(totalMin % (60 * 5)) / 5
@@ -35,7 +34,6 @@ function callback(data) {
         ctx.putImageData(imageData, 0, 0);
         // update clock.
         clock.innerHTML = frameToClock(this.value)
-        //console.log(this.value);
 
     }
     slider.value = 0;
@@ -47,6 +45,9 @@ function callback(data) {
         if (playTimerId === undefined) {
             button.innerHTML = "&block;";
             playTimerId = window.setInterval(function() {
+                if (parseInt(slider.value) === data.nframes-1) {
+                    slider.value = 0
+                }
                 slider.value = parseInt(slider.value) + 1;
                 slider.oninput();
             }, 30);
