@@ -2,9 +2,14 @@
 
 from pathlib import Path
 import sys
-
+import time
 
 import numpy as np
+try:
+    from numba import jit
+except ImportError:
+    def jit(func):
+        return func
 
 
 def load_frames(path):
@@ -54,22 +59,49 @@ def get_stats(frames):
     }
 
 
+@jit
+def encode_single_frame(frame):
+    """
+    Encode a single frame, run-length-encoding the zero values.
+    """
+    frame = frame.flatten()
+    frame_data = np.zeros((len(frame),), np.uint8)
+
+    i = 0
+    run = 0
+    for pixel in frame.flatten():
+        if pixel == 0:
+            run += 1
+        else:
+            if run:
+                while run >= 128:
+                    frame_data[i] = 127
+                    i += 1
+                    run -= 127
+                frame_data[i] = run
+                i += 1
+                run = 0
+            frame_data[i] = (int(pixel) | 0x80)
+            i += 1
+
+    if run:
+        while run >= 128:
+            frame_data[i] = 127
+            i += 1
+            run -= 127
+        frame_data[i] = run
+        i += 1
+        run = 0
+
+    return frame_data[:i]
+
+
 def encode_all_frames(frames, stats, output):
     """
     Encodes all the frames in a data cube.
 
     The pixel values are normalized (in-place) to 0-255.
     """
-    run = 0
-
-    def write_run():
-        nonlocal run
-        if run:
-            while run >= 128:
-                frame_data.append(127)
-                run -= 127
-            frame_data.append(run)
-            run = 0
 
     # The offsets of the frames, written at the beginning of the file
     dims = np.array(
@@ -82,7 +114,6 @@ def encode_all_frames(frames, stats, output):
         fd.write(offsets.tobytes())
         for i, frame in enumerate(frames):
             print(f"\rFrame {i}/{stats['nframes']}", end='')
-            frame_data = []
             frame = (
                 (frame - stats['minpix']) * 127 /
                 (stats['maxpix'] - stats['minpix'])
@@ -90,15 +121,7 @@ def encode_all_frames(frames, stats, output):
             assert(np.max(frame) <= 127)
             frame = np.array(frame, dtype=np.uint8)
             offsets[i] = fd.tell()
-            run = 0
-            for pixel in frame.flatten():
-                if pixel == 0:
-                    run += 1
-                else:
-                    write_run()
-                    frame_data.append(int(pixel) | 0b10000000)
-            write_run()
-            fd.write(bytes(frame_data))
+            fd.write(encode_single_frame(frame).tobytes())
 
         fd.seek(12)
         fd.write(offsets.tobytes())
