@@ -64,6 +64,8 @@ h1 {
     /* position: absolute;
     top: 0;
     left: 0; */
+    background: url('bg.png');
+    background-size: 800px 800px;
 }
 
 #playbutton {
