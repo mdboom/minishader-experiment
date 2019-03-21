@@ -27,10 +27,18 @@
     </div>
     </body>
     <script>
+
+    const frameToClock = (fr) => {
+        const totalMin = fr * 5
+        const hours = Math.floor(totalMin / (60 * 5))
+        const mins = Math.floor(totalMin % (60 * 5)) / 5
+        return `${(hours < 10 ? '0' : '') + hours}:${(mins < 10 ? '0' : '') + mins}:00`
+    }
+
     MS.loadBinary('cube.bin')
         .then(({data, nframes, width, height}) => {
             const slider = document.getElementById('frame-slider')
-
+            const clock = document.getElementById('clock')
             const sfmtaMap = MS.minishader({
                 target: '.main-container',
                 background: 'bg.png',
@@ -41,6 +49,7 @@
                 totalFrames: nframes,
                 onDraw: (f) => {
                     slider.value = f
+                    clock.innerHTML = frameToClock(f)
                 }
             })
 

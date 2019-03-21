@@ -26,7 +26,7 @@ export function draw(map) {
     var imageData = new ImageData(outputBuffer, width, height);
     var ctx = canvas.getContext("2d");
     ctx.putImageData(imageData, 0, 0);
-    map.onDraw(currentFrame)
+    map.onDraw(currentFrame);
 }
 
 export function incrementFrame(currentFrame, totalFrames) {
