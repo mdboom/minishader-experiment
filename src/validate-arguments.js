@@ -1,6 +1,8 @@
 export const DEFAULT_ARGUMENTS = {
     width: 800,
-    height: 800
+    height: 800,
+    isRunning: false,
+    startAtFrame: 0
 }
 
 export const REQUIRED_FIELDS = new Set(['target', 'data'])

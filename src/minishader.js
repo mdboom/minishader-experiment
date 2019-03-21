@@ -5,13 +5,15 @@ const MINISHADER_CLASS = 'minishader-canvas'
 
 function createCanvasElement({width, height, background}) {
     const canvas = document.createElement("canvas");
+    const MULT = .8
     canvas.className = MINISHADER_CLASS;
     canvas.setAttribute("height", height);
     canvas.setAttribute("width", width);
-    canvas.setAttribute("style", `width: ${width * .6}px; height ${height * .6}px`);
+    console.log(canvas.clientWidth)
+    canvas.setAttribute("style", `width: ${width * MULT}px; height ${height * MULT}px`);
     if (background) {
         canvas.style.background = `url('${background}')`
-        canvas.style.backgroundSize = `${width* .6}px ${height * .6}px`
+        canvas.style.backgroundSize = `${width* MULT}px ${height * MULT}px`
     }
     return canvas
 }
@@ -43,7 +45,7 @@ export function startFunction(map) {
         map.interval = setInterval(() => {
             map.currentFrame = incrementFrame(map.currentFrame, map.totalFrames)
             draw(map)
-        }, 30)
+        }, 20)
         return map
     }
 }
@@ -68,6 +70,7 @@ export function goToFrameFunction(map) {
         return map
     }
 }
+
 export function nextFrameFunction(map) {
     return function nextFrame() {
         map.currentFrame = incrementFrame(map.currentFrame, map.totalFrames)
@@ -75,6 +78,7 @@ export function nextFrameFunction(map) {
         return map
     }
 }
+
 export function previousFrameFunction(map) {
     return function previousFrame() {
         map.currentFrame = decrementFrame(map.currentFrame, map.totalFrames)
@@ -82,25 +86,26 @@ export function previousFrameFunction(map) {
     }
 }
 
-export default function minishader(args) {
-    const validatedArguments = validateArguments(args)
+export default function minishader(userArgs) {
+    const args = validateArguments(userArgs)
 
     const map = {}
 
     map.interval = undefined
-    map.data = validatedArguments.data
-    map.width = validatedArguments.width
-    map.height = validatedArguments.height
-    map.background = validatedArguments.background
-    map.colorMap = validatedArguments.colorMap || colorMaps.viridis
+    map.data = args.data
+    map.width = args.width
+    map.height = args.height
+    map.background = args.background
+    map.colorMap = args.colorMap || colorMaps.viridis
 
-    map.currentFrame = validatedArguments.startAtFrame || 0
-    map.totalFrames = validatedArguments.totalFrames
-    map.onDraw = validatedArguments.onDraw
-    map.isRunning = validatedArguments.isRunning || false
+    map.currentFrame = args.startAtFrame
+    map.totalFrames = args.totalFrames
+    map.onDraw = args.onDraw
+    map.isRunning = args.isRunning
+
     map.canvas = createCanvasElement(map)
     
-    const parent = document.querySelector(validatedArguments.target)
+    const parent = document.querySelector(args.target)
 
     parent.appendChild(map.canvas)
 

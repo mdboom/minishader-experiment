@@ -5,7 +5,7 @@ describe('validateArguments', () => {
         expect(() => validateArguments()).toThrow()
         expect(() => validateArguments(123)).toThrow()
     })
-    it('returns a handful of default arguments if not specified', () => {
+    it('properly sets width and height', () => {
         expect(validateArguments({target: '#test', data: []}).width).toBe(DEFAULT_ARGUMENTS.width)
         expect(validateArguments({target: '#test', data: []}).height).toBe(DEFAULT_ARGUMENTS.height)
         expect(validateArguments({target: '#test', data: [], height: 10}).height).not.toBe(DEFAULT_ARGUMENTS.height)
