@@ -4,7 +4,9 @@
   "description": "This is an experiment with doing the last mile of data shading in the browser. Rather than sending fully-colorized PNGs, we send a the pixel bin values and do the color mapping in Javascript. This cuts down on the amount of data required to send to the browser, and also should make choosing a color map and transfer function at runtime without doing that computation at runtime on a server.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "webpack --mode=production",
+    "start": "webpack --mode=development --watch"
   },
   "repository": {
     "type": "git",
@@ -12,23 +14,14 @@
   },
   "author": "",
   "license": "MPL 2.0",
-  "@pika/pack": {
-    "pipeline": [
-      [
-        "@pika/plugin-standard-pkg",
-        {
-          "exclude": [
-            "__tests__/**/*"
-          ]
-        }
-      ]
-    ]
-  },
   "bugs": {
     "url": "https://github.com/mdboom/minishader-experiment/issues"
   },
   "homepage": "https://github.com/mdboom/minishader-experiment#readme",
   "devDependencies": {
-    "@pika/plugin-standard-pkg": "^0.3.14"
+    "@pika/plugin-standard-pkg": "^0.3.14",
+    "jest": "^24.5.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
   }
 }

@@ -1,16 +1,6 @@
 function callback(data) {
-    console.log(`${data.width}x${data.height} - ${data.nframes}`);
     var slider = document.getElementById("range");
     slider.setAttribute("max", data.nframes - 1);
-
-    // var background = document.getElementById("background");
-    // background.setAttribute("height", data.height);
-    // background.setAttribute("width", data.width);
-    // background.setAttribute("style", `width: ${data.width  * .8}px; height ${data.height * .8}px`);
-
-    // var ctx = background.getContext("2d");
-    // ctx.fillStyle = 'black';
-    // ctx.fillRect(0, 0, data.width, data.height);
 
     var canvas = document.getElementById("canvas");
     canvas.setAttribute("height", data.height);
@@ -28,13 +18,13 @@ function callback(data) {
     }
 
     slider.oninput = function() {
-        var frame = decompressFrame(data, this.value, outputBuffer, inferno, 210);
+        // this manipulates outputBuffer.
+        decompressFrame(data, this.value, outputBuffer, inferno, 210);
         var imageData = new ImageData(outputBuffer, data["width"], data["height"]);
         var ctx = canvas.getContext("2d");
         ctx.putImageData(imageData, 0, 0);
         // update clock.
         clock.innerHTML = frameToClock(this.value)
-
     }
     slider.value = 0;
     slider.oninput();
@@ -59,4 +49,27 @@ function callback(data) {
     }
 }
 
-loadData("cube.bin", callback);
+loadBinary('cube.bin').then(callback)
+
+/* 
+
+const timelapse = new MiniShader({
+    source: "cube.bin",
+    target: '#sfmta-container',
+    scrubber: '#sfmta-scrubber',
+    background: 'map.png'
+})
+
+timelapse.addScrubber({
+    target: '#sfmta-slider',
+})
+
+timelapse.start()                // starts the timelapse
+timelapse.pause()                // stops the timelapse
+timelapse.goToFrame(30)          // show frame 30
+timelapse.nextFrame()            // go to the next frame
+timelapse.previousFrame()        // go to the next frame
+timelapse.getCurrentFrame()      // get current frame
+
+*/
+

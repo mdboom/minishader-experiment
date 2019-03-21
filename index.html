@@ -4,8 +4,9 @@
 
 
             <link href="https://fonts.googleapis.com/css?family=Catamaran:100,300,500,900" rel="stylesheet">
-            <script src="decoder.js"></script>
-        <script src="example.js"></script>
+            <!-- <script src="decoder.js"></script> -->
+        <!-- <script src="example.js"></script> -->
+        <script src="./dist/minishader.js"></script>
         <link rel="stylesheet" href="minishader.css"/>
     </head>
     <body>
@@ -17,12 +18,52 @@
         </div>
         <div class=main-container>
             <!-- <canvas width="500" height="500" id="background"></canvas> -->
-            <canvas width="500" height="500" id="canvas"></canvas>
+            <!-- <canvas width="500" height="500" id="canvas"></canvas> -->
         </div>
         <div class="slide-container">
-            <input type="range" min="0" max="100" value="0" class="slider" id="range">
-            <button id="playbutton">▶</button>
+            <input type="range" min="0" max="100" value="0" class="slider" id="frame-slider">
+            <button id="playbutton">start</button>
         </div>
     </div>
     </body>
+    <script>
+    MS.loadBinary('cube.bin')
+        .then(({data, nframes, width, height}) => {
+            const slider = document.getElementById('frame-slider')
+
+            const sfmtaMap = MS.minishader({
+                target: '.main-container',
+                background: 'bg.png',
+                data,
+                width,
+                height,
+                colorMap: MS.colorMaps.inferno,
+                totalFrames: nframes,
+                onDraw: (f) => {
+                    slider.value = f
+                }
+            })
+
+            // select slider and give it the onFrame redraw.
+            slider.setAttribute('min', 0)
+            slider.setAttribute('max', nframes-1)
+            slider.setAttribute('value', 0)
+            slider.oninput = element => {
+                const f = parseInt(element.target.value)
+                sfmtaMap.goToFrame(f)
+            }
+
+            const playButton = document.getElementById('playbutton')
+            playButton.onclick = () => {
+                if (sfmtaMap.isRunning) {
+                    // stop it.
+                    sfmtaMap.stop();
+                    playButton.innerHTML = 'start'
+                } else {
+                    sfmtaMap.start();
+                    playbutton.innerHTML = 'stop'
+                }
+            }
+        })
+    </script>
 </html>
