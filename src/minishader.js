@@ -1,6 +1,6 @@
 import validateArguments from './validate-arguments'
 import colorMaps from './color-maps'
-import { decompressFrame } from './decoder'
+import decompressFrame from './decompress-frame'
 const MINISHADER_CLASS = 'minishader-canvas'
 
 function createCanvasElement({width, height, background}) {
