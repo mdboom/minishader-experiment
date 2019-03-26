@@ -1,11 +1,8 @@
 <html>
     <meta charset="UTF-8">
     <head>
-
-
-            <link href="https://fonts.googleapis.com/css?family=Catamaran:100,300,500,900" rel="stylesheet">
-            <script src="decoder.js"></script>
-        <script src="example.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Catamaran:100,300,500,900" rel="stylesheet">
+        <script src="./dist/minishader.js"></script>
         <link rel="stylesheet" href="minishader.css"/>
     </head>
     <body>
@@ -15,14 +12,60 @@
             <div class=when>Organized by Time Of Day</div>
             <div id='clock'></div>
         </div>
-        <div class=main-container>
-            <!-- <canvas width="500" height="500" id="background"></canvas> -->
-            <canvas width="500" height="500" id="canvas"></canvas>
-        </div>
+        <div class=main-container></div>
         <div class="slide-container">
-            <input type="range" min="0" max="100" value="0" class="slider" id="range">
-            <button id="playbutton">▶</button>
+            <input type="range" min="0" max="100" value="0" class="slider" id="frame-slider">
+            <button id="playbutton">start</button>
         </div>
     </div>
     </body>
+    <script>
+
+    const frameToClock = (fr) => {
+        const totalMin = fr * 5
+        const hours = Math.floor(totalMin / (60 * 5))
+        const mins = Math.floor(totalMin % (60 * 5)) / 5
+        return `${(hours < 10 ? '0' : '') + hours}:${(mins < 10 ? '0' : '') + mins}:00`
+    }
+
+    MS.loadBinary('cube.bin')
+        .then(({data, nframes, width, height}) => {
+            const slider = document.getElementById('frame-slider')
+            const clock = document.getElementById('clock')
+            const sfmtaMap = MS.minishader({
+                target: '.main-container',
+                background: 'bg.png',
+                data,
+                width,
+                height,
+                colorMap: MS.colorMaps.inferno,
+                totalFrames: nframes,
+                onDraw: (f) => {
+                    slider.value = f
+                    clock.innerHTML = frameToClock(f)
+                }
+            })
+
+            // select slider and give it the onFrame redraw.
+            slider.setAttribute('min', 0)
+            slider.setAttribute('max', nframes-1)
+            slider.setAttribute('value', 0)
+            slider.oninput = element => {
+                const f = parseInt(element.target.value)
+                sfmtaMap.goToFrame(f)
+            }
+
+            const playButton = document.getElementById('playbutton')
+            playButton.onclick = () => {
+                if (sfmtaMap.isRunning) {
+                    // stop it.
+                    sfmtaMap.stop();
+                    playButton.innerHTML = 'start'
+                } else {
+                    sfmtaMap.start();
+                    playbutton.innerHTML = 'stop'
+                }
+            }
+        })
+    </script>
 </html>
